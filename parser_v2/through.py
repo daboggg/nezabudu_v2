@@ -1,9 +1,12 @@
+import logging
 import re
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from parser_v2.data import through_data
+
+logger = logging.getLogger(__name__)
 
 
 # выделяет временные метки из сообщения
@@ -30,12 +33,15 @@ def extract_date__time(message: str) -> tuple[str, dict[str, int]]:
 
     # удаляю лишние пробелы из строки
     message = " ".join(re.split("\s+", message.strip()))
-
+    logger.info(f"элементы datetime: {tmp_dict}")
+    logger.info(f"message: {message}")
     return message, tmp_dict
 
 
 def create_datetime(date__time_dict: dict[str, int]) -> datetime:
-    return datetime.now() + relativedelta(**date__time_dict)
+    dt = datetime.now() + relativedelta(**date__time_dict)
+    logger.info(f"созданная дата-время: {dt}")
+    return dt
 
 
 def start(message: str) -> dict[str, str | dict[str, datetime]]:
