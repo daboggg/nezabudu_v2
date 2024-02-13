@@ -5,6 +5,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from parser_v2.data import through_data
+from parser_v2.utils import remove_extra_spaces
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,7 @@ def extract_date__time(message: str) -> tuple[str, dict[str, int]]:
     parts_of_time = through_data.keys()
 
     for part_of_time in parts_of_time:
-        variants = through_data.get(part_of_time)
+        variants = through_data.get(part_of_time) + [item.capitalize() for item in through_data.get(part_of_time)]
         pattern = f".*?(?P<num>(\d+)?(^|\W)({'|'.join(variants)})).*"
         try:
             result = re.fullmatch(pattern, message)
@@ -32,7 +33,7 @@ def extract_date__time(message: str) -> tuple[str, dict[str, int]]:
             pass
 
     # удаляю лишние пробелы из строки
-    message = " ".join(re.split("\s+", message.strip()))
+    message = remove_extra_spaces(message)
     logger.info(f"элементы datetime: {tmp_dict}")
     logger.info(f"message: {message}")
     return message, tmp_dict
@@ -48,7 +49,7 @@ def start(message: str) -> dict[str, str | dict[str, datetime]]:
     msg, date__time_dict = extract_date__time(message)
     return {
         "params": {"run_date": create_datetime(date__time_dict)},
-        "msg": msg
+        "messages": {"message": msg}
     }
 
 
