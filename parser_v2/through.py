@@ -5,6 +5,7 @@ from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 from parser_v2.data import through_data
+from parser_v2.errors import DatetimeValueException
 from parser_v2.utils import remove_extra_spaces
 
 logger = logging.getLogger(__name__)
@@ -31,7 +32,8 @@ def extract_date__time(message: str) -> tuple[str, dict[str, int]]:
             message = message.replace(match_found, "")
         except Exception as e:
             pass
-
+    if not tmp_dict:
+        raise DatetimeValueException("дата набрана неправильно, воспользуйтесь помощью")
     # удаляю лишние пробелы из строки
     message = remove_extra_spaces(message)
     logger.info(f"элементы datetime: {tmp_dict}")
@@ -48,10 +50,6 @@ def create_datetime(date__time_dict: dict[str, int]) -> datetime:
 def start(message: str) -> dict[str, str | dict[str, datetime]]:
     msg, date__time_dict = extract_date__time(message)
     return {
-        "params": {"run_date": create_datetime(date__time_dict)},
+        "params": {"run_date": create_datetime(date__time_dict), "trigger":"date"},
         "messages": {"message": msg}
     }
-
-
-if __name__ == '__main__':
-    print(start("все равно через 26 минут, 8 недель 58 любой! текстЖ 85, месяц день 3 года  никого не поймают"))

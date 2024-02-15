@@ -16,7 +16,6 @@ def start(reminder_str: str) -> dict[str, str | dict]:
         # удалить слово "Через" или "через" из строки
         reminder_str = re.sub("Через|через", "", reminder_str)
         result = through.start(reminder_str)
-        result["params"]["trigger"] = "date"
         logger.info(f"возвращенное из парсера значение: {result}")
         return result
     # если в составе строки есть слово "каждый" или его варианты
@@ -24,10 +23,10 @@ def start(reminder_str: str) -> dict[str, str | dict]:
         # удалить слово "каждый" или его варианты
         reminder_str = re.sub("|".join(every_data), "", reminder_str)
         result = every.start(reminder_str)
-        result["params"]["trigger"] = "cron"
         logger.info(f"возвращенное из парсера значение: {result}")
         return result
 
 if __name__ == '__main__':
-    start("все равно через 8 лет 7 Дней  никого не поймают 8 Минут.")
-    start("Каждый уебищный день что то происходит каждое")
+    # start("все равно через 8 лет 7 Дней  никого не поймают 8 Минут.")
+    # start("Каждый уебищный 31 июля в d 23.02 что то происходит")
+    start("Каждый уебищный  09        числа     в  12.45   что то происходит")
