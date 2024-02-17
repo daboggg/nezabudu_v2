@@ -48,7 +48,7 @@ def create_datetime(date__time_dict: dict[str, int]) -> datetime:
 
 
 def start(message: str) -> dict[str, str | dict[str, datetime]]:
-    msg, date__time_dict = extract_date__time(message)
+    msg, date__time_dict = extract_date__time(remove_extra_spaces(message))
     return {
         "params": {"run_date": create_datetime(date__time_dict), "trigger":"date"},
         "messages": {"message": msg}
