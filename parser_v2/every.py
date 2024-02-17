@@ -1,7 +1,7 @@
 import logging
 import re
 
-from parser_v2.data import day_of_week, end_day_of_week, months
+from parser_v2.data import day_of_week, end_day_of_week, months, months_variants
 from parser_v2.errors import DatetimeValueException
 from parser_v2.utils import (remove_extra_spaces, checking_hour_range, checking_minute_range,
                              checking_day_range, checking_day_of_month)
@@ -15,7 +15,7 @@ def extract_date__time(message: str) -> dict[str,dict[str, str]]:
     period = ""
 
     # каждый "день" со временем или без
-    if res := re.match(r".*(?P<date>день(\s+\w*\s*\d?\d[-:.]\d\d)?).*", message):
+    if res := re.match(r".*(?P<date>(день|День)(\s+\w*\s*\d?\d[-:.]\d\d)?).*", message):
         match_found = remove_extra_spaces(res.group("date"))
         match_found_list = match_found.split(" ")
         tmp_dict["day"] = "*"
@@ -45,14 +45,14 @@ def extract_date__time(message: str) -> dict[str,dict[str, str]]:
         message = message.replace(res.group("date"), "")
 
     # каждое "число, месяц" со временем или без
-    elif res := re.match(f".*?(?P<date>(\d?\d\s+)({'|'.join(months[1:])})(\s+\w*\s*\d?\d[-:.]\d\d)?).*", message):
+    elif res := re.match(f".*?(?P<date>(\d?\d\s+)({'|'.join(months_variants)})(\s+\w*\s*\d?\d[-:.]\d\d)?).*", message):
         match_found = remove_extra_spaces(res.group("date"))
         match_found_list = match_found.split(" ")
         tmp_dict["hour"] = 8
         tmp_dict["minute"] = 0
         if match_found_list[0].isdigit():
-            tmp_dict["day"] = checking_day_range(int(match_found_list[0]), months.index(match_found_list[1]))
-            tmp_dict["month"] = months.index(match_found_list[1])
+            tmp_dict["day"] = checking_day_range(int(match_found_list[0]), months_variants.get(match_found_list[1]))
+            tmp_dict["month"] = months_variants.get(match_found_list[1])
             period = f"каждое {match_found_list[0]} {match_found_list[1]} в 8:00"
             if len(match_found_list) > 2:
                 hour, minute = re.split(r":|-|\.", match_found_list[-1])
@@ -62,7 +62,7 @@ def extract_date__time(message: str) -> dict[str,dict[str, str]]:
         message = message.replace(res.group("date"), "")
 
     # каждое "число месяца" со временем или без
-    elif res := re.match(f".*?(?P<date>(\d?\d\s+)(число|числа)(\s+\w*\s*\d?\d[-:.]\d\d)?).*", message):
+    elif res := re.match(f".*?(?P<date>(\d?\d\s+)(число|числа|Число|Числа)(\s+\w*\s*\d?\d[-:.]\d\d)?).*", message):
         match_found = remove_extra_spaces(res.group("date"))
         match_found_list = match_found.split(" ")
         tmp_dict["hour"] = 8
