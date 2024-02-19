@@ -21,7 +21,7 @@ def start(reminder_str: str) -> dict[str, dict]:
         return result
 
     # если в составе строки есть слово "каждый" или его варианты
-    elif res := set(every_data).intersection(reminder_str.split(" ")):
+    elif set(every_data).intersection(reminder_str.split(" ")):
         # удалить слово "каждый" или его варианты
         reminder_str = re.sub("|".join(every_data), "", reminder_str)
         result = every.start(reminder_str)
@@ -36,9 +36,9 @@ def start(reminder_str: str) -> dict[str, dict]:
 if __name__ == '__main__':
     # start("все равно через 8    Лет    7    Дней     никого не поймают 8 Минут.")
     # start("Каждый      уебищный     31     День     в   23.02    что    то    происходит")
-    # start("Каждый уебищный  09        Числа     в  12.45   что то происходит")
+    start("Каждый уебищный  09        Числа     в  12.45   что то происходит")
     # start("Каждый    уебищный  09        Среда   в  12.45   что то происходит")
     # start("тропики     в    африке   1    Января   в    1:44    и    где    то      там")
     # start("тропики     в    африке   Среда   в    1:44    и    где    то      там")
     # start("тропики     в    африке   12.12.24   в    1:44    и    где    то      там")
-    start("тропики     в    африке      в    15:03    и    где    то      там")
+    # start("тропики     в    африке      в    15:03    и    где    то      там")
