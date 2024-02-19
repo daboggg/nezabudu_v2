@@ -1,14 +1,13 @@
 import logging
 import re
 
-import through
-from parser_v2 import every, in_date
+from parser_v2 import every, in_date,through
 from parser_v2.data import every_data
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def start(reminder_str: str) -> dict[str, dict]:
+def parse(reminder_str: str) -> dict[str, dict]:
     # удалить в конце строки точку
     if reminder_str.endswith("."): reminder_str = reminder_str[:-1]
 
@@ -35,8 +34,9 @@ def start(reminder_str: str) -> dict[str, dict]:
 
 if __name__ == '__main__':
     # start("все равно через 8    Лет    7    Дней     никого не поймают 8 Минут.")
+    parse("все равно через 8    Лет,    7    Дней,  и   3 часа,     никого не поймают.")
     # start("Каждый      уебищный     31     День     в   23.02    что    то    происходит")
-    start("Каждый уебищный  09        Числа     в  12.45   что то происходит")
+    # parse("Каждый уебищный  09        Числа     в  12.45   что то происходит")
     # start("Каждый    уебищный  09        Среда   в  12.45   что то происходит")
     # start("тропики     в    африке   1    Января   в    1:44    и    где    то      там")
     # start("тропики     в    африке   Среда   в    1:44    и    где    то      там")
