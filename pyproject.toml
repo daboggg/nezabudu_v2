@@ -12,6 +12,9 @@ apscheduler = "^3.10.4"
 aiogram = "^3.4.1"
 environs = "^10.3.0"
 aiogram-dialog = "^2.1.0"
+soundfile = "^0.12.1"
+speechrecognition = "3.8.1"
+numpy = "^1.26.4"
 
 
 [build-system]
