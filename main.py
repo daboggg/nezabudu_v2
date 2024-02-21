@@ -4,8 +4,10 @@ import logging
 import apscheduler.events
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
+from aiogram_dialog import setup_dialogs
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
+from bot.dialogs.main_dialog import main_dialog
 from bot.handlers.cmd import cmd_router
 from bot.handlers.main_handlers import main_handler
 from bot.middlewares.apschedmiddleware import SchedulerMiddleware
@@ -56,10 +58,11 @@ async def start():
     dp.include_routers(
         cmd_router,
         main_handler,
+        main_dialog,
     )
 
     # подключение диалогов
-    # setup_dialogs(dp)
+    setup_dialogs(dp)
 
     dp.startup.register(start_bot)
     dp.shutdown.register(stop_bot)

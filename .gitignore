@@ -2,3 +2,5 @@
 venv
 .idea
 .env
+out.wav
+tmp.ogg

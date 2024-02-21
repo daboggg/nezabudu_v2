@@ -4,7 +4,6 @@ import re
 from parser_v2 import every, in_date,through
 from parser_v2.data import every_data
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def parse(reminder_str: str) -> dict[str, dict]:
