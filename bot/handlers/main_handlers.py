@@ -26,6 +26,7 @@ async def remind_me(message: Message, bot: Bot, dialog_manager: DialogManager):
             text = await conv_voice(message=message, bot=bot)
             remind = parse(text)
             print(remind)
+
             # await dialog_manager.start(MainSG.start, mode=StartMode.RESET_STACK, data={"one": "one"})
             # print(remind)
         await message.answer(str(remind))
