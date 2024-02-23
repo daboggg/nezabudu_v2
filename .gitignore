@@ -4,3 +4,4 @@ venv
 .env
 out.wav
 tmp.ogg
+db.sqlite3
