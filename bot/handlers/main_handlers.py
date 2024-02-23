@@ -10,6 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from bot.keyboards.main_ketboards import cancel_or_edit_kb
 from bot.state_groups import Main
 from bot.utils.converter import conv_voice
+from bot.utils.from_datetime_to_str import datetime_to_str
 from bot.utils.save_data import save_data
 from parser_v2.parse import parse
 
@@ -33,11 +34,15 @@ async def set_remind(message: Message, bot: Bot, state: FSMContext, apscheduler:
     print(remind)
 
     job = await save_data(state=state, bot=bot, session=session, apscheduler=apscheduler, user_id=user_id)
-
+    item = []
+    if rd:= remind.get("messages").get("period"):
+        item.append(as_key_value("♾", Italic(rd)))
     remind_info =as_list(
         Bold("💡 Напоминание запланировано.\n"),
-        as_key_value("⏰", Italic(str(job.next_run_time))),
+        as_key_value("⏰", Italic(datetime_to_str(job.next_run_time))),
+        *item,
         as_key_value("📝", Italic(remind.get("messages").get("message"))),
+
     ).as_html()
 
     await state.clear()
