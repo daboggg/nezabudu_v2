@@ -1,17 +1,16 @@
 import asyncio
 import logging
 
-import apscheduler.events
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram_dialog import setup_dialogs
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from bot.dialogs.main_dialog import main_dialog
+from bot.comands import set_commands
 from bot.handlers.cmd import cmd_router
 from bot.handlers.main_handlers import main_handler
 from bot.middlewares.apschedmiddleware import SchedulerMiddleware
-from bot.comands import set_commands
+from db.db_helper import db_helper
 from settings import settings
 
 
@@ -43,13 +42,13 @@ async def start():
     # scheduler.add_listener(delete_remind_from_db, apscheduler.events.EVENT_JOB_REMOVED)
     scheduler.start()
 
-    bot = Bot(token=settings.bots.bot_token)
+    bot = Bot(token=settings.bots.bot_token, parse_mode='HTML')
 
     # восстановление заданий при старте из базы данных
     # await recovery_job_to_scheduler(scheduler, bot)
 
     storage = MemoryStorage()
-    dp = Dispatcher(storage=storage)
+    dp = Dispatcher(storage=storage, session=db_helper.get_scoped_session())
 
     # регистрация middlewares
     dp.update.middleware.register(SchedulerMiddleware(scheduler))
@@ -58,7 +57,6 @@ async def start():
     dp.include_routers(
         cmd_router,
         main_handler,
-        main_dialog,
     )
 
     # подключение диалогов
@@ -68,6 +66,7 @@ async def start():
     dp.shutdown.register(stop_bot)
 
     logger.info('start')
+
 
     try:
         await dp.start_polling(bot, allowed_updates=dp.resolve_used_update_types())
