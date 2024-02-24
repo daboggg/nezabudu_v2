@@ -13,7 +13,8 @@ logger = logging.getLogger(__name__)
 
 
 # добавить задание в бд
-async def add_remind_to_db(state: FSMContext, session: AsyncSession, user_id: int) -> int:
+async def add_remind_to_db(state: FSMContext, user_id: int) -> int:
+    session = db_helper.get_scoped_session()
     state_data = await state.get_data()
     remind = state_data.get("remind")
     params = remind.get("params")
@@ -52,9 +53,10 @@ async def get_tasks_from_db() -> list[Remind]:
 
 # удалить задание из бд
 async def delete_task_from_db(job: apscheduler.events.JobEvent):
-    session = db_helper.get_scoped_session()
-    task = await session.get(Remind, job.job_id)
-    logger.info(f"удален job с id: {job.job_id}")
-    await session.delete(task)
+    session: AsyncSession = db_helper.get_scoped_session()
+    result = await session.execute(select(Remind).where(Remind.id == int(job.job_id)))
+    if task := result.scalar():
+        logger.info(f"удален job с id: {job.job_id}")
+        await session.delete(task)
     await session.commit()
     await session.close()

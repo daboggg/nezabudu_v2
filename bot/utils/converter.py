@@ -17,7 +17,3 @@ async def conv_voice(message: Message, bot: Bot):
         audio = recognizer.record(source)
 
     return recognizer.recognize_google(audio, language='ru-RU')
-    # try:
-    #     return recognizer.recognize_google(audio, language='ru-RU')
-    # except sr.UnknownValueError:
-    #     print("Нераспознано")
