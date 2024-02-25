@@ -17,10 +17,14 @@ main_handler = Router()
 
 
 # дополнительно запрашиваем и сохраняем текст сообщения
-@main_handler.message(Main.get_message)
+@main_handler.message(Main.get_message, F.text | F.voice)
 async def get_message(message: Message, bot: Bot, state: FSMContext, apscheduler: AsyncIOScheduler):
     state_data = await state.get_data()
-    state_data.get("remind").get("messages")["message"] = message.text
+    if message.text:
+        state_data.get("remind").get("messages")["message"] = message.text
+    elif message.voice:
+        text = await conv_voice(message=message, bot=bot)
+        state_data.get("remind").get("messages")["message"] = text
     await set_remind(message, bot, state, apscheduler, message.from_user.id)
 
 
@@ -87,3 +91,7 @@ async def remind_me(message: Message, bot: Bot, state: FSMContext, apscheduler: 
         print(e)
         await message.answer("пожалуйста введите время и текст напоминания")
 
+
+@main_handler.message(Main.get_message)
+async def get_message(message: Message):
+    await message.answer("введите текст напоминания")
