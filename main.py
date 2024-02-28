@@ -15,6 +15,7 @@ from bot.handlers.edit_remind_handlers import edit_remind_handlers
 from bot.handlers.main_handlers import main_handler
 from bot.middlewares.apschedmiddleware import SchedulerMiddleware
 from db.db_actions import delete_task_from_db
+from scheduler.scheduler_actions import recovery_job_to_scheduler
 from settings import settings
 
 
@@ -53,7 +54,7 @@ async def start():
     bot = Bot(token=settings.bots.bot_token, parse_mode='HTML')
 
     # восстановление заданий при старте из базы данных
-    # await recovery_job_to_scheduler(scheduler, bot)
+    await recovery_job_to_scheduler(scheduler, bot)
 
     storage = MemoryStorage()
     dp = Dispatcher(storage=storage)

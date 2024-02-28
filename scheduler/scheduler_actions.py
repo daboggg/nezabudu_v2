@@ -1,3 +1,4 @@
+import json
 import logging
 
 from aiogram import Bot
@@ -6,6 +7,7 @@ from apscheduler.job import Job
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from bot.handlers.send_remind_hendlers import send_reminder
+from db.db_actions import get_tasks_from_db
 
 logger = logging.getLogger(__name__)
 
@@ -83,20 +85,32 @@ async def edit_job_to_scheduler(
 
 
 # восстановление заданий из базы данных
-# async def recovery_job_to_scheduler(apscheduler: AsyncIOScheduler, bot: Bot):
-#     if tasks := await get_tasks_from_db():
-#         for task in tasks:
-#             tmp = json.loads(task.task_params)
-#
-#             apscheduler.add_job(
-#                 send_reminder,
-#                 **tmp,
-#                 id=str(task.id),
-#                 name=str(task.chat_id),
-#                 kwargs={
-#                     'bot': bot,
-#                     'chat_id': task.chat_id,
-#                     'text': task.text,
-#                     'criterion': task.criterion
-#                 }
-#             )
+async def recovery_job_to_scheduler(apscheduler: AsyncIOScheduler, bot: Bot):
+    if tasks := await get_tasks_from_db():
+        for task in tasks:
+            tmp = json.loads(task.params)
+
+            apscheduler.add_job(
+                send_reminder,
+                **tmp,
+                id=str(task.id),
+                name=str(task.chat_id),
+                kwargs={
+                    'apscheduler': apscheduler,
+                    'bot': bot,
+                    'chat_id': task.chat_id,
+                    'text': task.text,
+                }
+            )
+# job = apscheduler.add_job(
+#         send_reminder,
+#         **params,
+#         id=str(remind_id),
+#         name=str(user_id),
+#         kwargs={
+#             'apscheduler': apscheduler,
+#             'bot': bot,
+#             'chat_id': user_id,
+#             'text': messages.get('message'),
+#         }
+#     )
