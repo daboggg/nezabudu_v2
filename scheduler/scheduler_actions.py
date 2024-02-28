@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 from apscheduler.job import Job
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from bot.handlers.cmd import send_reminder
+from bot.handlers.send_remind_hendlers import send_reminder
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +29,7 @@ async def add_job_to_scheduler(
         id=str(remind_id),
         name=str(user_id),
         kwargs={
+            'apscheduler': apscheduler,
             'bot': bot,
             'chat_id': user_id,
             'text': messages.get('message'),
@@ -58,6 +59,7 @@ async def edit_job_to_scheduler(
         return apscheduler.modify_job(
             job_id=str(job_id),
             kwargs={
+                'apscheduler': apscheduler,
                 'bot': bot,
                 'chat_id': int(job.name),
                 'text': message,
@@ -72,6 +74,7 @@ async def edit_job_to_scheduler(
         return apscheduler.modify_job(
             job_id=str(job_id),
             kwargs={
+                'apscheduler': apscheduler,
                 'bot': bot,
                 'chat_id': int(job.name),
                 'text': message,

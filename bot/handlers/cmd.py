@@ -1,14 +1,15 @@
-from aiogram import Router, Bot
-from aiogram.filters import Command, CommandStart
+from aiogram import Router
+from aiogram.filters import CommandStart
+from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
-from aiogram.utils.formatting import as_list
 
 cmd_router = Router()
 
 
-# @cmd_router.message(CommandStart())
-# async def cmd_start(_, dialog_manager: DialogManager) -> None:
-#     pass
+@cmd_router.message(CommandStart())
+async def cmd_start(message: Message, state: FSMContext) -> None:
+    await state.clear()
+    await message.answer("пожалуйста введите время и текст напоминания ")
 
 
 # @cmd_router.message(Command(commands="help"))
@@ -20,16 +21,3 @@ cmd_router = Router()
 # async def cmd_start(_, dialog_manager: DialogManager) -> None:
 #     await dialog_manager.start(ListOfRemindersSG.start, mode=StartMode.RESET_STACK)
 #
-
-
-
-
-# функция для отправки напоминаний
-async def send_reminder(bot: Bot, chat_id: int, text: str) -> None:
-    # форматирование текста для напоминания
-    format_text = as_list(
-        "\t── ⋆⋅☆⋅⋆ ── ⋆⋅☆⋅⋆ ──",
-        f"👉{text}👈",
-        "\t── ⋆⋅☆⋅⋆ ── ⋆⋅☆⋅⋆ ──",
-    )
-    await bot.send_message(chat_id, format_text.as_html(), parse_mode='HTML')

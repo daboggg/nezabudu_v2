@@ -6,3 +6,7 @@ class Main(StatesGroup):
 
 class EditReminds(StatesGroup):
     get_remind_time = State()
+
+
+class RescheduleReminds(StatesGroup):
+    get_remind = State()

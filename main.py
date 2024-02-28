@@ -10,6 +10,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from bot.comands import set_commands
 from bot.handlers.cancel_remind_handles import cancel_remind_handlers
 from bot.handlers.cmd import cmd_router
+from bot.handlers.delay_remind_hahdlwers import delay_remind_handlers
 from bot.handlers.edit_remind_handlers import edit_remind_handlers
 from bot.handlers.main_handlers import main_handler
 from bot.middlewares.apschedmiddleware import SchedulerMiddleware
@@ -62,8 +63,9 @@ async def start():
 
     # подключение роутеров
     dp.include_routers(
-        edit_remind_handlers,
         cmd_router,
+        delay_remind_handlers,
+        edit_remind_handlers,
         cancel_remind_handlers,
         main_handler,
     )
