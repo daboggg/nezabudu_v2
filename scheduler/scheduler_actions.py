@@ -102,15 +102,3 @@ async def recovery_job_to_scheduler(apscheduler: AsyncIOScheduler, bot: Bot):
                     'text': task.text,
                 }
             )
-# job = apscheduler.add_job(
-#         send_reminder,
-#         **params,
-#         id=str(remind_id),
-#         name=str(user_id),
-#         kwargs={
-#             'apscheduler': apscheduler,
-#             'bot': bot,
-#             'chat_id': user_id,
-#             'text': messages.get('message'),
-#         }
-#     )

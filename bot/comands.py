@@ -13,7 +13,7 @@ async def set_commands(bot: Bot):
         #     description='помощь'
         # ),
         BotCommand(
-            command='list_of_reminds',
+            command='list',
             description='список напоминаний'
         ),
     ]

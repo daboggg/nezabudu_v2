@@ -93,3 +93,23 @@ async def delete_task_from_db(job: apscheduler.events.JobEvent):
             await session.delete(task)
         await session.commit()
         await session.close()
+
+
+# взять задание из бд
+async def get_task_from_db(reminder_id: int) -> Remind:
+    session = db_helper.get_scoped_session()
+    result = await session.execute(select(Remind).where(Remind.id == reminder_id))
+    logger.info(f"получен reminder с id: {reminder_id}")
+    result = result.scalar()
+    await session.close()
+    return result
+
+
+async def get_tasks_from_db_by_user_id(user_id: int) -> list[Remind]:
+    session = db_helper.get_scoped_session()
+
+    result: Result = await session.execute(select(Remind).where(Remind.chat_id == user_id))
+    tasks = result.scalars().all()
+    await session.close()
+
+    return list(tasks)

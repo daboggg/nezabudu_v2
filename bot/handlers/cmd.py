@@ -1,7 +1,10 @@
 from aiogram import Router
-from aiogram.filters import CommandStart
+from aiogram.filters import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
+from aiogram_dialog import DialogManager, StartMode
+
+from bot.state_groups import ListOfReminders
 
 cmd_router = Router()
 
@@ -17,7 +20,7 @@ async def cmd_start(message: Message, state: FSMContext) -> None:
 #     await message.answer("помощь помощь")
 
 
-# @cmd_router.message(Command(commands="list_of_reminds"))
-# async def cmd_start(_, dialog_manager: DialogManager) -> None:
-#     await dialog_manager.start(ListOfRemindersSG.start, mode=StartMode.RESET_STACK)
-#
+@cmd_router.message(Command(commands="list"))
+async def cmd_start(_, dialog_manager: DialogManager) -> None:
+    await dialog_manager.start(ListOfReminders.start, mode=StartMode.RESET_STACK)
+

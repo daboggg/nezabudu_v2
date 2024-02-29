@@ -8,6 +8,7 @@ from aiogram_dialog import setup_dialogs
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from bot.comands import set_commands
+from bot.dialogs.list_reminders_dialog import list_reminders_dialog
 from bot.handlers.cancel_remind_handles import cancel_remind_handlers
 from bot.handlers.cmd import cmd_router
 from bot.handlers.delay_remind_hahdlwers import delay_remind_handlers
@@ -69,6 +70,7 @@ async def start():
         edit_remind_handlers,
         cancel_remind_handlers,
         main_handler,
+        list_reminders_dialog,
     )
 
     # подключение диалогов
