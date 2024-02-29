@@ -36,7 +36,7 @@ async def send_reminder(
 
     job = apscheduler.add_job(
         send_reminder,
-        run_date=datetime.now() + timedelta(minutes=1),
+        run_date=datetime.now() + timedelta(minutes=15),
         id=remind_id,
         trigger='date',
         name=str(chat_id),

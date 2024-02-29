@@ -25,7 +25,7 @@ async def delay_remind(callback: CallbackQuery, apscheduler: AsyncIOScheduler):
     job_id = tmp[1]
     delay_time = int(tmp[2])
     job: Job = apscheduler.reschedule_job(job_id=job_id, trigger='date',
-                                          run_date=datetime.now() + timedelta(minutes=delay_time))
+                                          run_date=datetime.now() + timedelta(hours=delay_time))
     remind_info = as_list(
         Bold("💡 Напоминание отложено.\n"),
         as_key_value("⏰", Italic(datetime_to_str(job.next_run_time))),
